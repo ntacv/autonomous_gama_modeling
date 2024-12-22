@@ -18,6 +18,7 @@ global{
 	
 	// constants
 	float step <- 10#s;
+	float max_speed <- 50#km/#h;
 	
 	// init parameters
 	int population_size <- 200;
@@ -38,6 +39,9 @@ global{
 	float max_car_cost <- 0.0 update:max([car_cost,car_cost_auto])*(1+proba_delta_car_cost);
 	
 	float accident_size <- 50#m;
+	float proba_accident <- 0.5 ;
+	
+	int new_car <- 0;
 	
 	// parameters
 	
@@ -45,6 +49,7 @@ global{
 	// update:people count each.infected;
 	
 	init{
+		
 		create building from:shapefile_building;
 		create road from:shapefile_road;
 		//among car (inhabitant where: each.money > 20000);
@@ -85,11 +90,17 @@ species inhabitant skills:[moving]{
 		}
 	}
 	
+	reflex dump_car when:dead(personal_car){
+		personal_car <- nil;
+	}
+	
 	action deliver_car{
 		create car number:1 returns: created_car{
 			car_type <- flip(proba_car_type);
 			location <- self.location;
+			//car_owner <- self
 		}
+		new_car <- new_car+1;
 		personal_car <- first(created_car);
 		money <- self.money - personal_car.purchase_cost;
 	}
@@ -113,7 +124,9 @@ species inhabitant skills:[moving]{
 			location <- myself.location;
 		}
 	}
-	reflex create_accident when:personal_car != nil and 5<length(car at_distance accident_size){
+	reflex create_accident when:personal_car != nil 
+	and 5<length(car at_distance accident_size)
+	and flip(personal_car.car_proba_accident){
 		create accident{
 			location <- myself.location;
 		}
@@ -122,18 +135,28 @@ species inhabitant skills:[moving]{
 		}
 	}
 	
+	
 	aspect default{
 		draw circle(10#m) color:#cornflowerblue ;
 	}
 }
-species car{
+species car skills:[moving]{
 	bool is_free <- true;
 	bool car_type <- false;
+	
+	float fiability <- 1.0;
+	float car_proba_accident <- 0.5 update: proba_accident+ proba_accident*fiability;
 	
 	float purchase_cost <- car_type 
 	? car_cost*rnd(proba_delta_car_cost,1+proba_delta_car_cost) 
 	: car_cost_auto*rnd(proba_delta_car_cost,1+proba_delta_car_cost);
 	
+	reflex drive when:speed>0.0{
+		fiability <- fiability - 0.01;
+	}
+	reflex brake_down when:fiability<=0.0{
+		do die;
+	}
 	
 	reflex train_itself{
 		
@@ -153,20 +176,26 @@ species accident{
 experiment visual type:gui{
 	parameter "population size" var:population_size step:1;
 	
-	
 	output{
 		monitor length_accident value:length(accident) refresh:every(1#cycle);
 		monitor length_car value:length(car) refresh:every(1#cycle);
+		monitor new_car value:new_car refresh:every(1#cycle);
 		monitor length_inhabitant value:length(inhabitant) refresh:every(1#cycle);
 		
 		display map type:2d axes:false background:#black{
-			
 			species building;
 			species road;
 			species accident;
 			species car;
 			species inhabitant;
-			
+		}
+		display charts {
+			chart "monitor count for each species" type:series{
+				data "inhabitant" value:length(inhabitant);
+				data "car" value:length(car);
+				data "new_car" value:new_car;
+				data "accident" value:length(accident);
+			}
 		}
 	}
 }

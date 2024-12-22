@@ -23,6 +23,14 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
+## todo
+- check car proba_accident and fiability
+- realistic input parameters for salary
+- maintenance price and 
+- parameters
+- owner of a car
+- move accident to car
+
 ## \! Presentation
 
 slides to follow the report and live interaction or video  
@@ -58,12 +66,14 @@ Cars can go out by themselves to train and analyse data, to turn and speed up by
 
 Segregation of choice for the type of car  
 Start by walking and increase car desire 
+compute number of accident > more accident influence the proba desire_autonomous
 
 ### The cars
 
 Manage purchase price and maintenance price  
 Accidents happens when too many cars are too close together   
 Or too high of proba\_brake\_law  
+Or too low of fiability caused by long distance driven
 Gets money
 
 ### The management
