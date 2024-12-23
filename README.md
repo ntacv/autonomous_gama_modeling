@@ -1,5 +1,9 @@
 # Autonomous Cars Modeling Project
 
+## Context
+
+This repo is a modeling project for a master 2 class "Modeling and simulation of complex systems". It is done using Gama software and presents a report in this readme. 
+
 ## USTH December 2024
 
 Nathan Choukroun \- USTH ICT M2 / ESILV A5 Embedded  
@@ -43,6 +47,7 @@ and the difficulties
 running model and interactions  
 github repo for the model  
 presentation: slides to follow the report and live interaction or video
+the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
 
 ### Introduction
 
