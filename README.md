@@ -1,4 +1,5 @@
 # Autonomous Cars Modeling Project
+# WorkInProgress
 
 ## Context
 
@@ -28,12 +29,22 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
 ## todo
-- check car proba_accident and fiability
-- realistic input parameters for salary
-- maintenance price and 
-- parameters
-- owner of a car
-- move accident to car
+- [X] check car proba_accident and fiability
+- [ ] realistic input parameters for salary, maintenance time
+- [X] maintenance price
+- [X] parameters
+- [ ] owner of a car
+- [X] move accident to car
+- [ ] starting car_type proportion
+- [ ] change car_type proba (from schelling and accident_history)
+- [ ] influence car_type proba with accident_history
+- [ ] influence car_type proba with schelling
+- [ ] init create car location is random
+
+proba_choose_car_type depend on accident_history and schelling
+car_type not the same proba_accident
+so if more autonomous on roads, less accident, so less go back to manual (but possible)
+
 
 ## \! Presentation
 
@@ -41,6 +52,9 @@ slides to follow the report and live interaction or video
 10-15min  
 explain the problematic and the results to answer the problem  
 and the difficulties
+
+add pictures and code to explain
+debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
 
 ## The model
 
@@ -80,6 +94,7 @@ Accidents happens when too many cars are too close together
 Or too high of proba\_brake\_law  
 Or too low of fiability caused by long distance driven
 Gets money
+The type of the car is defined by the main proba_car_type (which could be a general parameter based on government influence, marketing and advertising influense) and the number of accident a resident has been part of. for each accident the probaility to move to autonomous is increased.
 
 ### The management
 
@@ -119,12 +134,14 @@ and documentation of the model and comment in the code
 \-add habitant (to buildings and cars, maybe not visible but update color of parent location)  
 Where is a person going? How does he go there?   
 \-add cars (move based on people needs)  
-\-add accident specie   
+\-add accident species 
 \-add money problems (purchase, condition of the car) gain money for each trip  
 \-implement accidents (caused by too many neighbours, low condition, bad people)  
+\-implement accident history: it is a list of accident for an inhabitant if his car was part of the accident
 \-implement segregation and motivation to buy auto  
 \-add probability of breaking the law and causing accident  
 \-maybe implement speed of car based on urgency and law causing accident or more money
+\-find realistic parameters for the model (probabilities, prices, salaries, maintenance reccurence)
 
 ### Experiment and interactions
 
