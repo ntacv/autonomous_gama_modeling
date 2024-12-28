@@ -21,7 +21,7 @@ global{
 	
 	// constants
 	//experiment time span of a frame. the smallest, the more realistic
-	float step <- 10#s;
+	float step <- 100#s;
 	//max_speed of the agent should correspond to the highest realistic speed of the studied city
 	float max_speed <- 130#km/#h;
 	
@@ -31,7 +31,7 @@ global{
 	//int car_size <- 100;
 	
 	//base initial money amount
-	float start_money <- 12000.0;
+	float start_money <- 9000.0;
 	//percentage of delta for the start_money
 	float proba_delta_money <- 0.5 min:0.0 max:1.0;
 	//base salary for every cycle
@@ -46,11 +46,11 @@ global{
 	//decrease step for fiability variable at each cycle
 	float fiability_delta <- 0.001;
 	//percentage of chance to pay for maintenance instead of waiting for breakdown
-	float proba_maintain_car <- 0.5 min:0.0 max:1.0;
+	float proba_maintain_car <- 0.05 min:0.0 max:1.0;
 	//base manual car cost
 	float car_cost <- 10000.0;
 	//base autonomous car cost
-	float car_cost_auto <- 15000.0;
+	float car_cost_auto <- 10000.0;
 	//percentage of delta for car cost (all types)
 	float proba_delta_car_cost <- 0.1 min:0.0 max:1.0;
 	//maximum possible cost of a car (necessary amount to consider buying a car)
@@ -58,16 +58,18 @@ global{
 	update:max([car_cost,car_cost_auto])*(1+proba_delta_car_cost);
 	
 	//percentage of car_type at the beginning of the experiment (will change to schelling)
-	float start_proba_car_type <- 0.1 min:0.0 max:1.0;
+	float init_proportion_car_type <- 0.01 min:0.0 max:1.0;
 	//probability of autonomous or manual car type creation
-	float proba_car_type <- 0.5 min:0.0 max:1.0;
+	float init_proba_car_type <- 0.5 min:0.0 max:1.0;
 	
 	//radius of accident 
-	float accident_size <- 50#m;
+	float accident_size <- 10#m;
 	//probability of causing an accident 
 	float proba_accident <- 0.5 min:0.0 max:1.0;
 	//number of cars in a radius to prodiuce an accident
-	int car_in_accident <- 4 min:1 max:20;
+	int car_in_accident <- 2 min:1 max:20;
+	//lowering of the probability of an accident for a autonomous vehicle compared to manual
+	float proba_accident_autonomous <- 0.01;
 	
 	//count number of newly bought cars
 	int new_car <- 0;
@@ -105,9 +107,10 @@ species inhabitant skills:[moving]{
 	float speed <- inhabitant_speed;
 	float money <- start_money * rnd(proba_delta_money,1+proba_delta_money);
 	list<accident> accident_history;
-	float proba_choose_car_type <- 0.5;
+	float proba_choose_car_type <- init_proba_car_type;
 	
 	car personal_car;
+	list<car> car_history;
 	//float distance_self_car <- 0.0 update:self distance_to personal_car;
 	
 	init{
@@ -120,23 +123,24 @@ species inhabitant skills:[moving]{
 	reflex dump_car when:dead(personal_car){
 		personal_car <- nil;
 	}
-	reflex define_car_type when:personal_car!=nil{
+	
+	action define_car_type{
 		proba_choose_car_type <- personal_car.car_type 
-		? proba_car_type-0.1*length(accident_history) 
-		: proba_car_type+0.1*length(accident_history);
+		? proba_choose_car_type-0.01*length(accident_history) 
+		: proba_choose_car_type+0.1*length(accident_history);
+		//search realistic values
 	}
-	
-	
 	action deliver_car(bool init_delivery<-false){
 		do debug(" max_car_cost "+max_car_cost);
 		create car number:1 returns: created_car{
-			car_type <- init_delivery ? flip(start_proba_car_type) : flip(myself.proba_choose_car_type);
+			car_type <- init_delivery ? flip(init_proportion_car_type) : flip(myself.proba_choose_car_type);
 			location <- myself.location;
 			car_owner <- myself;
 		}
 		new_car <- new_car+1;
 		personal_car <- first(created_car);
 		money <- self.money - personal_car.purchase_cost;
+		car_history << personal_car;
 		do debug(" purchase_cost "+personal_car.purchase_cost);
 	}
 	
@@ -145,6 +149,7 @@ species inhabitant skills:[moving]{
 	}
 	
 	reflex buy_car when:personal_car=nil and money>max_car_cost{
+		do define_car_type;
 		do deliver_car;
 	}
 	
@@ -184,7 +189,8 @@ species car skills:[moving]{
 	bool car_type <- false;
 	
 	float fiability <- 1.0;
-	float car_proba_accident <- 0.5 update: proba_accident*(1-fiability);
+	float car_proba_accident_car_type <- 1.0 update:car_type ? proba_accident_autonomous : 1.0 ;//can add brake_law
+	float car_proba_accident <- 0.5 update: proba_accident*(1-fiability)*car_proba_accident_car_type;
 	inhabitant car_owner <- nil;
 	
 	float purchase_cost <- car_type 
@@ -202,6 +208,12 @@ species car skills:[moving]{
 	reflex create_accident when:car_in_accident<length(self neighbors_at (accident_size)) and flip(self.car_proba_accident){
 		create accident number:1 returns:current_accident{
 			location <- myself.location;
+			habitant_responsible <- myself.car_owner;
+			car_responsible <- myself;
+			time_accident <- current_date;
+			proba_accident <- myself.car_proba_accident;
+			car_type <- myself.car_type;
+			fiability <- myself.fiability;
 		}
 		car_owner.accident_history << first(current_accident);
 		do die;
@@ -217,6 +229,14 @@ species car skills:[moving]{
 }
 
 species accident{
+	inhabitant habitant_responsible;
+	car car_responsible;
+	point location_accident;
+	date time_accident;
+	float proba_accident;
+	bool car_type;
+	float fiability;
+	
 	aspect default{
 		draw triangle(60#m) color:#yellow;
 	}
@@ -227,7 +247,7 @@ experiment visual type:gui{
 	parameter "population size" var:population_size step:1 min:50 category:"init";
 	parameter "starting money per person" var:start_money step:1 category:"init";
 	parameter "proba delta money" var:proba_delta_money min:0.0 max:1.0 category:"init";
-	parameter "proportion of car_type" var:start_proba_car_type category:"init";
+	parameter "proportion of car_type" var:init_proportion_car_type category:"init";
 	
 	parameter "manual base car cost" var:car_cost step:1 category:"delta";
 	parameter "autonomous base car cost" var:car_cost_auto step:1 category:"delta";

@@ -1,16 +1,43 @@
 # Autonomous Cars Modeling Project
 # WorkInProgress
 
-## Context
+# Context
 
 This repo is a modeling project for a master 2 class "Modeling and simulation of complex systems". It is done using Gama software and presents a report in this readme. 
 
-## USTH December 2024
+# USTH December 2024
 
 Nathan Choukroun \- USTH ICT M2 / ESILV A5 Embedded  
-Supervised by Alexis Drogoul and Arthur Brugiere
+Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
 
-## Project topic presentation
+- [Autonomous Cars Modeling Project](#autonomous-cars-modeling-project)
+- [WorkInProgress](#workinprogress)
+- [Context](#context)
+- [USTH December 2024](#usth-december-2024)
+- [Project topic presentation](#project-topic-presentation)
+- [todo](#todo)
+- [! Presentation](#-presentation)
+- [The model](#the-model)
+  - [Introduction](#introduction)
+  - [The map](#the-map)
+  - [The road network](#the-road-network)
+  - [The population](#the-population)
+  - [The cars](#the-cars)
+  - [The management](#the-management)
+  - [Improvements](#improvements)
+- [Step and features of conception](#step-and-features-of-conception)
+  - [Steps](#steps)
+  - [Experiment and interactions](#experiment-and-interactions)
+  - [Cities and improvements](#cities-and-improvements)
+  - [Code commenting for documentation](#code-commenting-for-documentation)
+- [Experimentation of the model](#experimentation-of-the-model)
+  - [Explanation of the experiments](#explanation-of-the-experiments)
+  - [Calibration](#calibration)
+  - [Discussion of the results](#discussion-of-the-results)
+- [Conclusion](#conclusion)
+
+
+# Project topic presentation
 
 What financial incentives should be provided to move a city to autonomous cars? 
 
@@ -28,17 +55,17 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
-## todo
+# todo
 - [X] check car proba_accident and fiability
-- [ ] realistic input parameters for salary, maintenance time
+- [ ] realistic input parameters for salary, maintenance time (auto proba accident)
 - [X] maintenance price
 - [X] parameters
-- [ ] owner of a car
+- [X] owner of a car
 - [X] move accident to car
-- [ ] starting car_type proportion
-- [ ] change car_type proba (from schelling and accident_history)
-- [ ] influence car_type proba with accident_history
-- [ ] influence car_type proba with schelling
+- [X] starting car_type proportion
+- [X] change car_type proba accident_history
+- [ ] change car_type proba schelling
+- [ ] accident proba per car_type
 - [ ] init create car location is random
 
 proba_choose_car_type depend on accident_history and schelling
@@ -46,7 +73,7 @@ car_type not the same proba_accident
 so if more autonomous on roads, less accident, so less go back to manual (but possible)
 
 
-## \! Presentation
+# \! Presentation
 
 slides to follow the report and live interaction or video  
 10-15min  
@@ -56,14 +83,14 @@ and the difficulties
 add pictures and code to explain
 debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
 
-## The model
+# The model
 
 running model and interactions  
 github repo for the model  
 presentation: slides to follow the report and live interaction or video
 the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
 
-### Introduction
+## Introduction
 
 Problematic  
 Reasons and objectives  
@@ -77,17 +104,17 @@ Other criteria (segregation, money cap, fear of accident) will conclude on choos
 People are taking their cars or not to go to work.   
 Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
 
-### The map
+## The map
 
-### The road network
+## The road network
 
-### The population
+## The population
 
 Segregation of choice for the type of car  
 Start by walking and increase car desire 
 compute number of accident > more accident influence the proba desire_autonomous
 
-### The cars
+## The cars
 
 Manage purchase price and maintenance price  
 Accidents happens when too many cars are too close together   
@@ -96,7 +123,7 @@ Or too low of fiability caused by long distance driven
 Gets money
 The type of the car is defined by the main proba_car_type (which could be a general parameter based on government influence, marketing and advertising influense) and the number of accident a resident has been part of. for each accident the probaility to move to autonomous is increased.
 
-### The management
+## The management
 
 \-manage salaries  
 \-choose start help   
@@ -104,7 +131,7 @@ The type of the car is defined by the main proba_car_type (which could be a gene
 \-choose accident help  
 All based on auto or not
 
-### Improvements
+## Improvements
 
 constant speed, possibility of crashes, cars without passengers, more expensive, new models  
 folllow the law or not, but autonomous always follows  
@@ -121,12 +148,12 @@ whith differente schelling population (the moderns, the olds, the mids to buy au
 they evolve base on the proba of price and accident  
 accident with auto so decrese proba of buy auto
 
-## Step and features of conception
+# Step and features of conception
 
 progress report with steps and list of features  
 and documentation of the model and comment in the code
 
-### Steps
+## Steps
 
 \-define constants  
 \-define variables and parameters based on the context  
@@ -143,36 +170,36 @@ Where is a person going? How does he go there?
 \-maybe implement speed of car based on urgency and law causing accident or more money
 \-find realistic parameters for the model (probabilities, prices, salaries, maintenance reccurence)
 
-### Experiment and interactions
+## Experiment and interactions
 
 one batch extension  
 Paris to hanoi to LA  
 one interaction
 
-### Cities and improvements
+## Cities and improvements
 
-### Code commenting for documentation
+## Code commenting for documentation
 
-## Experimentation of the model
+# Experimentation of the model
 
-### Explanation of the experiments
+## Explanation of the experiments
 
 explanation and discussion of the experiments  
 you are the goverment
 
-### Calibration
+## Calibration
 
-need some real data)al data  
+need some real data
 calibration the input parameter  
 at a rate  
 compare the real data to the correct percentage of the model
 
-### Discussion of the results
+## Discussion of the results
 
 stats and proba to compare with results  
 I made modeling choices and i justify by
 
-## Conclusion
+# Conclusion
 
 how to reason about the model and the results  
 but synthetic  
