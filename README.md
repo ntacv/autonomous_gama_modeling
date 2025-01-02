@@ -1,5 +1,4 @@
-# Autonomous Cars Modeling Project
-# WorkInProgress
+# Autonomous Cars Modeling Project (WorkInProgress)
 
 # Context
 
@@ -10,8 +9,7 @@ This repo is a modeling project for a master 2 class "Modeling and simulation of
 Nathan Choukroun \- USTH ICT M2 / ESILV A5 Embedded  
 Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
 
-- [Autonomous Cars Modeling Project](#autonomous-cars-modeling-project)
-- [WorkInProgress](#workinprogress)
+- [Autonomous Cars Modeling Project (WorkInProgress)](#autonomous-cars-modeling-project-workinprogress)
 - [Context](#context)
 - [USTH December 2024](#usth-december-2024)
 - [Project topic presentation](#project-topic-presentation)
@@ -25,9 +23,9 @@ Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
   - [The cars](#the-cars)
   - [The management](#the-management)
   - [Improvements](#improvements)
-- [Step and features of conception](#step-and-features-of-conception)
+- [Steps and features of conception](#steps-and-features-of-conception)
   - [Steps](#steps)
-  - [Experiment and interactions](#experiment-and-interactions)
+  - [Experiments and interactions](#experiments-and-interactions)
   - [Cities and improvements](#cities-and-improvements)
   - [Code commenting for documentation](#code-commenting-for-documentation)
 - [Experimentation of the model](#experimentation-of-the-model)
@@ -57,16 +55,25 @@ Extension 3: Adding different car companies with different car models that react
 
 # todo
 - [X] check car proba_accident and fiability
-- [ ] realistic input parameters for salary, maintenance time (auto proba accident)
 - [X] maintenance price
 - [X] parameters
 - [X] owner of a car
 - [X] move accident to car
 - [X] starting car_type proportion
 - [X] change car_type proba accident_history
-- [ ] change car_type proba schelling
+- [X] move car_type proba to accident
 - [ ] accident proba per car_type
+- [ ] move car cost to inhabitant and add it to the car (owner is managing the sale)
+- [ ] remove max_car_cost condition
+- problems
 - [ ] init create car location is random
+- improvements
+- [ ] realistic input parameters for salary, maintenance time (auto proba accident)
+- [ ] change car_type proba schelling
+
+if car in accident > what car_type > habitant knows and update > car dump > 
+
+if no car > want a car > what type > then what price > check budget (over 0 or over base price) > can buy > car_cost to car
 
 proba_choose_car_type depend on accident_history and schelling
 car_type not the same proba_accident
@@ -79,6 +86,8 @@ slides to follow the report and live interaction or video
 10-15min  
 explain the problematic and the results to answer the problem  
 and the difficulties
+
+resident live analysis with explanation of the steps of life
 
 add pictures and code to explain
 debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
@@ -148,7 +157,9 @@ whith differente schelling population (the moderns, the olds, the mids to buy au
 they evolve base on the proba of price and accident  
 accident with auto so decrese proba of buy auto
 
-# Step and features of conception
+memory optimisation for running better model performance
+
+# Steps and features of conception
 
 progress report with steps and list of features  
 and documentation of the model and comment in the code
@@ -170,7 +181,7 @@ Where is a person going? How does he go there?
 \-maybe implement speed of car based on urgency and law causing accident or more money
 \-find realistic parameters for the model (probabilities, prices, salaries, maintenance reccurence)
 
-## Experiment and interactions
+## Experiments and interactions
 
 one batch extension  
 Paris to hanoi to LA  
@@ -198,6 +209,8 @@ compare the real data to the correct percentage of the model
 
 stats and proba to compare with results  
 I made modeling choices and i justify by
+
+We can also observe an effect of the accident localisation. The impact of the grid structure and complexity makes some roads more open to traffic and therefore to accidents. The model could be improved by adding a more realistic road network and a more realistic population movement. It would be helpful to start an anylisis of the traffic network and key points on reduicing accidents in the city. 
 
 # Conclusion
 

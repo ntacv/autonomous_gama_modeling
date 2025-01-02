@@ -1,11 +1,8 @@
 /**
 * Name: autonomousintegration
-* Based on the internal empty template. 
 * Author: nta
-* Tags: 
+* Tags: autonomous, city, car
 */
-
-
 model autonomousintegration
 
 global{
@@ -21,7 +18,7 @@ global{
 	
 	// constants
 	//experiment time span of a frame. the smallest, the more realistic
-	float step <- 100#s;
+	float step <- 5#m;
 	//max_speed of the agent should correspond to the highest realistic speed of the studied city
 	float max_speed <- 130#km/#h;
 	
@@ -61,6 +58,8 @@ global{
 	float init_proportion_car_type <- 0.01 min:0.0 max:1.0;
 	//probability of autonomous or manual car type creation
 	float init_proba_car_type <- 0.5 min:0.0 max:1.0;
+	//the multiplier for proba_choose_car_type when experiencing an accident
+	float ratio_prefered_car_type <- 2.0 min:0.0 max:5.0;
 	
 	//radius of accident 
 	float accident_size <- 10#m;
@@ -111,10 +110,11 @@ species inhabitant skills:[moving]{
 	
 	car personal_car;
 	list<car> car_history;
+	list<bool> car_type_history;
 	//float distance_self_car <- 0.0 update:self distance_to personal_car;
 	
 	init{
-		do debug(name+"start money "+money);
+		//do debug(name+"start money "+money);
 		if(self.money>max_car_cost){
 			do deliver_car(true);
 		}
@@ -124,14 +124,14 @@ species inhabitant skills:[moving]{
 		personal_car <- nil;
 	}
 	
+	//not used
 	action define_car_type{
-		proba_choose_car_type <- personal_car.car_type 
-		? proba_choose_car_type-0.01*length(accident_history) 
-		: proba_choose_car_type+0.1*length(accident_history);
+		proba_choose_car_type <- last(accident_history).car_type
+		? proba_choose_car_type/ratio_prefered_car_type 
+		: proba_choose_car_type*ratio_prefered_car_type;
 		//search realistic values
 	}
 	action deliver_car(bool init_delivery<-false){
-		do debug(" max_car_cost "+max_car_cost);
 		create car number:1 returns: created_car{
 			car_type <- init_delivery ? flip(init_proportion_car_type) : flip(myself.proba_choose_car_type);
 			location <- myself.location;
@@ -141,15 +141,16 @@ species inhabitant skills:[moving]{
 		personal_car <- first(created_car);
 		money <- self.money - personal_car.purchase_cost;
 		car_history << personal_car;
-		do debug(" purchase_cost "+personal_car.purchase_cost);
+		car_type_history << personal_car.car_type;
+		//do debug(" purchase_cost "+personal_car.purchase_cost);
 	}
 	
 	reflex make_money {
 		money <- money + salary*rnd(proba_delta_salary,1+proba_delta_salary);
 	}
 	
-	reflex buy_car when:personal_car=nil and money>max_car_cost{
-		do define_car_type;
+	reflex buy_car when:personal_car=nil{
+		// do define_car_type;
 		do deliver_car;
 	}
 	
@@ -205,6 +206,13 @@ species car skills:[moving]{
 		do die;
 	}
 	
+	action update_owner_proba(inhabitant owner){
+		owner.proba_choose_car_type <- last(owner.car_type_history)
+		? owner.proba_choose_car_type/ratio_prefered_car_type 
+		: owner.proba_choose_car_type*ratio_prefered_car_type ;
+		return owner.proba_choose_car_type;
+	}
+	
 	reflex create_accident when:car_in_accident<length(self neighbors_at (accident_size)) and flip(self.car_proba_accident){
 		create accident number:1 returns:current_accident{
 			location <- myself.location;
@@ -216,6 +224,8 @@ species car skills:[moving]{
 			fiability <- myself.fiability;
 		}
 		car_owner.accident_history << first(current_accident);
+		float proba <- update_owner_proba(car_owner);
+		do debug(" proba accident " +proba);
 		do die;
 	}
 	
@@ -263,10 +273,11 @@ experiment visual type:gui{
 	
 	
 	output synchronized: true{
+		monitor ratio_global_choose_car_type  value: length(inhabitant where (each.proba_choose_car_type>0.5))/length(inhabitant) refresh:every(1#cycle);
+		monitor ratio_car_type value: (car count each.car_type)/(car count !each.car_type) refresh:every(1#cycle);
 		monitor length_accident value:length(accident) refresh:every(1#cycle);
 		monitor length_car value:length(car) refresh:every(1#cycle);
 		monitor new_car value:new_car refresh:every(1#cycle);
-		monitor length_inhabitant value:length(inhabitant) refresh:every(1#cycle);
 		monitor max_car_cost value:max_car_cost refresh:every(1#cycle);
 		
 		layout vertical([0::5,horizontal([1::6,2::4])::5]);
@@ -284,6 +295,8 @@ experiment visual type:gui{
 				data "car" value:length(car);
 				data "new_car" value:new_car;
 				data "accident" value:length(accident);
+				data "accident manu" value:accident count !each.car_type;
+				data "accident auto" value:accident count each.car_type;
 			}
 		}
 		display chart_car {
