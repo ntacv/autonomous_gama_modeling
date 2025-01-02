@@ -59,7 +59,7 @@ global{
 	//probability of autonomous or manual car type creation
 	float init_proba_car_type <- 0.5 min:0.0 max:1.0;
 	//the multiplier for proba_choose_car_type when experiencing an accident
-	float ratio_prefered_car_type <- 2.0 min:0.0 max:5.0;
+	float ratio_prefered_car_type <- 0.1 min:0.0 max:5.0;
 	
 	//radius of accident 
 	float accident_size <- 10#m;
@@ -68,7 +68,7 @@ global{
 	//number of cars in a radius to prodiuce an accident
 	int car_in_accident <- 2 min:1 max:20;
 	//lowering of the probability of an accident for a autonomous vehicle compared to manual
-	float proba_accident_autonomous <- 0.01;
+	float proba_accident_autonomous <- 0.01 min:0.0 max:1.0;
 	
 	//count number of newly bought cars
 	int new_car <- 0;
@@ -208,8 +208,8 @@ species car skills:[moving]{
 	
 	action update_owner_proba(inhabitant owner){
 		owner.proba_choose_car_type <- last(owner.car_type_history)
-		? owner.proba_choose_car_type/ratio_prefered_car_type 
-		: owner.proba_choose_car_type*ratio_prefered_car_type ;
+		? owner.proba_choose_car_type-ratio_prefered_car_type 
+		: owner.proba_choose_car_type+2*ratio_prefered_car_type ;
 		return owner.proba_choose_car_type;
 	}
 	
@@ -266,6 +266,8 @@ experiment visual type:gui{
 	parameter "proba delta salary" var:proba_delta_salary category:"delta";
 	parameter "delta car fiability" var:fiability_delta min:0.0 category:"delta";
 	parameter "proba maintain car" var:proba_maintain_car category:"delta";
+	parameter "proba autonomous create accident" var:proba_accident_autonomous category:"delta";
+	parameter "ratio_prefered_car_type" var:ratio_prefered_car_type category:"delta";
 	
 	parameter "base car speed" var:car_speed max:max_speed category:"more";
 	parameter "base inhabitant speed" var:inhabitant_speed max:max_speed category:"more";
@@ -274,13 +276,14 @@ experiment visual type:gui{
 	
 	output synchronized: true{
 		monitor ratio_global_choose_car_type  value: length(inhabitant where (each.proba_choose_car_type>0.5))/length(inhabitant) refresh:every(1#cycle);
-		monitor ratio_car_type value: (car count each.car_type)/(car count !each.car_type) refresh:every(1#cycle);
+		monitor mean_global_choose_car_type  value: mean(inhabitant collect each.proba_choose_car_type) refresh:every(1#cycle);
+		monitor ratio_car_type value: (car count each.car_type)/((car count !each.car_type) + (car count each.car_type)) refresh:every(1#cycle);
 		monitor length_accident value:length(accident) refresh:every(1#cycle);
 		monitor length_car value:length(car) refresh:every(1#cycle);
 		monitor new_car value:new_car refresh:every(1#cycle);
 		monitor max_car_cost value:max_car_cost refresh:every(1#cycle);
 		
-		layout vertical([0::5,horizontal([1::6,2::4])::5]);
+		layout vertical([horizontal([0::5,horizontal([3::5,4::5])::5])::3,vertical([1::5,2::5])::7]);
 		
 		display map type:2d axes:false background:#black{
 			species building;
@@ -291,21 +294,33 @@ experiment visual type:gui{
 		}
 		display chart_species {
 			chart "monitor count for each species" type:series{
-				data "inhabitant" value:length(inhabitant);
+				data "inhabitant" value:length(inhabitant) color:#cornflowerblue;
 				data "car" value:length(car);
 				data "new_car" value:new_car;
-				data "accident" value:length(accident);
-				data "accident manu" value:accident count !each.car_type;
-				data "accident auto" value:accident count each.car_type;
+				data "accident" value:length(accident) color:#yellow;
+				data "accident manu" value:accident count !each.car_type color:#red;
+				data "accident auto" value:accident count each.car_type color:#green;
 			}
 		}
 		display chart_car {
 			chart "percentage of cars" type:series{
-				data "manual count cars" value:car count !each.car_type;
-				data "auto count cars" value:car count each.car_type;
-				data "amount of cars" value:length(car);
+				data "amount of cars" value:length(car) color:#cornflowerblue;
+				data "manual count cars" value:car count !each.car_type color:#red;
+				data "auto count cars" value:car count each.car_type color:#green;
 				data "negative money" value:length(inhabitant where (each.money<0));
 				data "average accident per habitant" value:mean(inhabitant collect length(each.accident_history));
+			}
+		}
+		display mean_type {
+			chart "pie charts" type:pie{
+				data "ratio_car_type_manuel" value: 1-mean(inhabitant collect each.proba_choose_car_type);
+				data "ratio_car_type_auto" value: mean(inhabitant collect each.proba_choose_car_type) color:#green;
+			}
+		}
+		display ratio_type {
+			chart "pie charts" type:pie{
+				data "ratio_car_type_manuel" value: (car count !each.car_type)/(length(car));
+				data "ratio_car_type_auto" value: (car count each.car_type)/(length(car)) color:#green;
 			}
 		}
 	}

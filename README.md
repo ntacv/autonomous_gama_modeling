@@ -62,7 +62,8 @@ Extension 3: Adding different car companies with different car models that react
 - [X] starting car_type proportion
 - [X] change car_type proba accident_history
 - [X] move car_type proba to accident
-- [ ] accident proba per car_type
+- [ ] end simu with full auto ratio or full manual ratio 
+- [ ] accident proba per car_type (+ ou *)
 - [ ] move car cost to inhabitant and add it to the car (owner is managing the sale)
 - [ ] remove max_car_cost condition
 - problems
@@ -86,6 +87,8 @@ slides to follow the report and live interaction or video
 10-15min  
 explain the problematic and the results to answer the problem  
 and the difficulties
+
+
 
 resident live analysis with explanation of the steps of life
 
@@ -112,6 +115,8 @@ This starting income will determine if they are able to buy a car or not.
 Other criteria (segregation, money cap, fear of accident) will conclude on choosing autonomous or manual cars.   
 People are taking their cars or not to go to work.   
 Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
+
+diagram of the species
 
 ## The map
 
