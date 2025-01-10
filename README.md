@@ -62,14 +62,16 @@ Extension 3: Adding different car companies with different car models that react
 - [X] starting car_type proportion
 - [X] change car_type proba accident_history
 - [X] move car_type proba to accident
+- [X] move car cost to inhabitant and add it to the car (owner is managing the sale)(negociate price and then buy car)
+- [X] remove max_car_cost condition
 - [ ] end simu with full auto ratio or full manual ratio 
-- [ ] accident proba per car_type (+ ou *)
-- [ ] move car cost to inhabitant and add it to the car (owner is managing the sale)
-- [ ] remove max_car_cost condition
+- [X] accident proba per car_type (+ ou *)
+- [X] first car for everyone should depend on proportion_car_type
+- [X] add in first chart number of car died of fiability (or proportion of fiability to accident)
 - problems
 - [ ] init create car location is random
 - improvements
-- [ ] realistic input parameters for salary, maintenance time (auto proba accident)
+- [ ] realistic input parameters for salary, maintenance time (auto proba accident)(steps 60min, population size)
 - [ ] change car_type proba schelling
 
 if car in accident > what car_type > habitant knows and update > car dump > 
@@ -101,6 +103,29 @@ running model and interactions
 github repo for the model  
 presentation: slides to follow the report and live interaction or video
 the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
+
+I start with 50chance of bying a specific car type because I don't know there advantages 
+but I already have a manual car
+
+
+I have to move around the city
+Having a car is easier
+I want to buy a car
+I can buy the car when:?
+I want a specific car type
+The price of the car is around the market price, maybe not in my budget
+I buy the car
+I get a salary to increase my money
+I can maintain my car based on my preference
+If my car is not maintained higher risk of accident
+if my car is autonomous, lower risk of accident
+If my car is in an accident
+I loose my car
+I had an accident with a manual car, 
+I may be able to buy a new car
+and repeat the process
+
+added timing to accident to reflect the impact of autonomous to the safeness of the city
 
 ## Introduction
 
