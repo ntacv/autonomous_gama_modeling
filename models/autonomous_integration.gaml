@@ -7,6 +7,7 @@ model autonomousintegration
 
 global{
 	// files
+	
 	//shape file of the building to experiment a specific city
 	file shapefile_building <- file("../includes/buildings.shp");
 	//shape file of the road to carry cars and inhabitants
@@ -17,19 +18,23 @@ global{
 	graph road_network;
 	
 	// constants
+	
 	//experiment time span of a frame. the smallest, the more realistic
-	float step <- 50#m;
+	float step <- 10#m;
 	//max_speed of the agent should correspond to the highest realistic speed of the studied city
 	float max_speed <- 130#km/#h;
 	
 	// init parameters
+	
 	//total population for the experiment (no create, no die)
 	int population_size <- 500;
-	
 	//base initial money amount
 	float start_money <- 10000.0;
 	//percentage of delta for the start_money
 	float proba_delta_money <- 0.5 min:0.0 max:1.0;
+	
+	// parameters
+	
 	//base salary for every cycle
 	float salary <- 10.0;
 	//percentage of delta for the salary
@@ -76,64 +81,69 @@ global{
 	//count number of car died of fiability too low
 	int broke_down <- 0;
 	
+	//average ratio of intention to buy a specific car type
 	float mean_choice <- 0.0 update: mean(inhabitant collect each.proba_choose_car_type);
 	//update: free_will ? flip(proba_choose_car_type) : flip(init_proba_car_type) mean(inhabitant collect each.new_car_type);
 	
 	
 	init{
-		
 		create building from:shapefile_building;
 		create road from:shapefile_road;
-		//among car (inhabitant where: each.money > 20000);
-		//create car number:car_size{
-		//	location <- one_of(road).location;
-		//}
+
+		//residents start the simulation in their house
 		create inhabitant number:population_size{
 			location <- one_of(building).location;
 			//personal_car <- one_of(car where(each.is_free = true));
 			//ask personal_car{is_free <- false;}
 		}
+		//cars and residents will be able to navigate on the roads
 		road_network <- as_edge_graph(road);
-	}	
+	}
+	
+	//condition to end the simulation 
+	//if every resident have bought an autonomous car, it means the market has shifted and the debt are less than max_car_cost
+	reflex end_simulation when:length(inhabitant) < length(car where(each.car_type)){
+		do pause;
+	}
 }
 
 species building{
 	aspect default{
-		draw shape color:#lightgray ;
+		draw shape color:#lightgray;
 	}
 }
 species road{
 	aspect default{
-		draw shape color:#gray ;
+		draw shape color:#gray;
 	}
 }
 species inhabitant skills:[moving]{
+	//resident have a constant goal to move around the city, going buildings to buildings
 	point target <- any_location_in(any(building));
 	float speed <- inhabitant_speed;
+	//instantiate random money amount at resident creation
 	float money <- start_money * rnd(1-proba_delta_money,1+proba_delta_money);
 	list<accident> accident_history;
+	//define the probability to choose a specific car type
 	float proba_choose_car_type <- 0.5 update: free_will ? proba_choose_car_type : init_proba_car_type;
-	bool new_car_type;
-	float new_car_price;
+	bool new_car_type <- false update: free_will ? flip(proba_choose_car_type) : flip(init_proba_car_type);
+	float new_car_price <- 0.0 update: new_car_type 
+			? car_cost_auto*rnd(1-proba_delta_car_cost,1+proba_delta_car_cost) 
+			: car_cost_manual*rnd(1-proba_delta_car_cost,1+proba_delta_car_cost);
 	
+	//a resident can have only one car at a time
 	car personal_car;
 	list<car> car_history;
 	list<bool> car_type_history;
-	//float distance_self_car <- 0.0 update:self distance_to personal_car;
 	
 	init{
-		//do debug(name+"start money "+money);
-		if(self.money>0.0){
-			do deliver_car(true);
+		//
+		if(self.money>new_car_price){
+			do deliver_car;
 		}
 	}
-	
-	
-	action deliver_car(bool init_delivery<-false){
-		new_car_type <- init_delivery ? flip(init_proportion_car_type) : flip(proba_choose_car_type);
-		new_car_price <- new_car_type 
-			? car_cost_auto*rnd(1-proba_delta_car_cost,1+proba_delta_car_cost) 
-			: car_cost_manual*rnd(1-proba_delta_car_cost,1+proba_delta_car_cost);
+	action deliver_car{
+		
 		create car number:1 returns: created_car{
 			car_type <- myself.new_car_type;
 			location <- myself.location;
@@ -316,7 +326,7 @@ experiment visual type:gui{
 		monitor new_car value:new_car refresh:every(1#cycle);
 		monitor max_car_cost value:max_car_cost refresh:every(1#cycle);
 		
-		layout vertical([horizontal([0::5,horizontal([3::5,4::5, 5::5])::5])::3,vertical([1::5,2::5])::7]);
+		layout vertical([horizontal([0::5,horizontal([3::5,4::5])::5])::3,vertical([1::5,2::5])::7]);
 		
 		display map type:2d axes:false background:#black{
 			species building;
@@ -347,21 +357,19 @@ experiment visual type:gui{
 			}
 		}
 		display mean_type {
-			chart "pie charts" type:pie{
+			chart "pie charts" type:pie position:{0,0} {
 				data "ratio_car_type_manuel" value: 1-mean(inhabitant collect each.proba_choose_car_type);
 				data "ratio_car_type_auto" value: mean(inhabitant collect each.proba_choose_car_type) color:#green;
 			}
-		}
-		display choice_type {
-			chart "pie charts" type:pie{
+			chart "pie charts" type:pie position:{1,0} {
 				data "ratio_car_type_manuel" value: 1-mean_choice;
 				data "ratio_car_type_auto" value:mean_choice color:#green;
 			}
 		}
 		display ratio_type {
 			chart "pie charts" type:pie{
-				data "ratio_car_type_manuel" value: (car count !each.car_type)/(length(car));
-				data "ratio_car_type_auto" value: (car count each.car_type)/(length(car)) color:#green;
+				data "ratio_car_type_manuel" value: length(car)!=0 ? (car count !each.car_type)/(length(car)) : 0;
+				data "ratio_car_type_auto" value: length(car)!=0 ? 1-(car count !each.car_type)/(length(car)) : 0 color:#green;
 			}
 		}
 	}

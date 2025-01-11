@@ -64,14 +64,14 @@ Extension 3: Adding different car companies with different car models that react
 - [X] move car_type proba to accident
 - [X] move car cost to inhabitant and add it to the car (owner is managing the sale)(negociate price and then buy car)
 - [X] remove max_car_cost condition
-- [ ] end simu with full auto ratio or full manual ratio 
+- [X] end simu with full auto ratio or full manual ratio 
 - [X] accident proba per car_type (+ ou *)
 - [X] first car for everyone should depend on proportion_car_type
 - [X] add in first chart number of car died of fiability (or proportion of fiability to accident)
 - problems
 - [ ] init create car location is random
 - improvements
-- [ ] realistic input parameters for salary, maintenance time (auto proba accident)(steps 60min, population size)
+- [X] realistic input parameters for salary, maintenance time (auto proba accident)(steps 60min, population size)
 - [ ] change car_type proba schelling
 
 if car in accident > what car_type > habitant knows and update > car dump > 
