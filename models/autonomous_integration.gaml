@@ -137,13 +137,12 @@ species inhabitant skills:[moving]{
 	list<bool> car_type_history;
 	
 	init{
-		//
+		//buy a car if the price is acceptable
 		if(self.money>new_car_price){
 			do deliver_car;
 		}
 	}
 	action deliver_car{
-		
 		create car number:1 returns: created_car{
 			car_type <- myself.new_car_type;
 			location <- myself.location;
@@ -151,31 +150,24 @@ species inhabitant skills:[moving]{
 			car_owner <- myself;
 		}
 		new_car <- new_car+1;
+		//attribute the car to its owner
 		personal_car <- first(created_car);
 		money <- self.money - personal_car.purchase_cost;
 		car_history << personal_car;
 		car_type_history << personal_car.car_type;
-		//do debug(" purchase_cost "+personal_car.purchase_cost);
 	}
 	
+	//remove a broken car to allow to buy a new one
 	reflex dump_car when:dead(personal_car){
 		personal_car <- nil;
 	}
 	
-	//not used
-	action define_car_type{
-		proba_choose_car_type <- last(accident_history).car_type
-		? proba_choose_car_type/ratio_prefered_car_type 
-		: proba_choose_car_type*ratio_prefered_car_type;
-		//search realistic values
-	}
-	
+	//increase money with random salary in the range
 	reflex make_money {
 		money <- money + salary*rnd(1-proba_delta_salary,1+proba_delta_salary);
 	}
 	
-	reflex buy_car when:personal_car=nil{
-		// do define_car_type;
+	reflex buy_car when:personal_car=nil and self.money>new_car_price{
 		do deliver_car;
 	}
 	
@@ -197,12 +189,10 @@ species inhabitant skills:[moving]{
 			}
 			return;
 		}
+		//approximate cost of maintenance of a car. Before broke down, cost of repair is cost of car
 		float maintenance_cost <- personal_car.purchase_cost * (1-personal_car.fiability);
 		money <- money - maintenance_cost;
 		personal_car.fiability <- 1.0;
-		
-		do debug("maintenance applied "+maintenance_cost);
-		
 	}
 	
 	aspect default{
@@ -257,10 +247,6 @@ species car skills:[moving]{
 		float proba <- update_owner_proba_double(car_owner);
 		do debug(" proba accident " +proba);
 		do die;
-	}
-	
-	reflex train_itself{
-		
 	}
 	
 	aspect default{
@@ -326,7 +312,7 @@ experiment visual type:gui{
 		monitor new_car value:new_car refresh:every(1#cycle);
 		monitor max_car_cost value:max_car_cost refresh:every(1#cycle);
 		
-		layout vertical([horizontal([0::5,horizontal([3::5,4::5])::5])::3,vertical([1::5,2::5])::7]);
+		layout vertical([horizontal([0::5,3::5])::5,vertical([1::5,2::5])::7]);
 		
 		display map type:2d axes:false background:#black{
 			species building;
@@ -344,7 +330,6 @@ experiment visual type:gui{
 				data "car_brake_down" value:broke_down color:#brown;
 				data "accident manu" value:accident count !each.car_type color:#red;
 				data "accident auto" value:accident count each.car_type color:#green;
-				//data "accident manu" value:length(accident where (each.car_type=false)) color:#red;
 			}
 		}
 		display chart_car {
@@ -357,19 +342,13 @@ experiment visual type:gui{
 			}
 		}
 		display mean_type {
-			chart "pie charts" type:pie position:{0,0} {
-				data "ratio_car_type_manuel" value: 1-mean(inhabitant collect each.proba_choose_car_type);
-				data "ratio_car_type_auto" value: mean(inhabitant collect each.proba_choose_car_type) color:#green;
+			chart "probability to choose a car_type" type:pie position:{0,0} size: {0.5, 0.5} {
+				data "manual" value: 1-mean(inhabitant collect each.proba_choose_car_type);
+				data "autonomous" value: mean(inhabitant collect each.proba_choose_car_type) color:#green;
 			}
-			chart "pie charts" type:pie position:{1,0} {
-				data "ratio_car_type_manuel" value: 1-mean_choice;
-				data "ratio_car_type_auto" value:mean_choice color:#green;
-			}
-		}
-		display ratio_type {
-			chart "pie charts" type:pie{
-				data "ratio_car_type_manuel" value: length(car)!=0 ? (car count !each.car_type)/(length(car)) : 0;
-				data "ratio_car_type_auto" value: length(car)!=0 ? 1-(car count !each.car_type)/(length(car)) : 0 color:#green;
+			chart "proportion of car type" type:pie position:{0.5,0} size: {0.5, 0.5}{
+				data "manual" value: length(car)!=0 ? (car count !each.car_type)/(length(car)) : 0;
+				data "autonomous" value: length(car)!=0 ? 1-(car count !each.car_type)/(length(car)) : 0 color:#green;
 			}
 		}
 	}

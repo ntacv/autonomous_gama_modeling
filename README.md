@@ -13,12 +13,10 @@ Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
 - [Context](#context)
 - [USTH December 2024](#usth-december-2024)
 - [Project topic presentation](#project-topic-presentation)
-- [todo](#todo)
-- [! Presentation](#-presentation)
+- [TODO](#todo)
+- [Presentation](#presentation)
 - [The model](#the-model)
   - [Introduction](#introduction)
-  - [The map](#the-map)
-  - [The road network](#the-road-network)
   - [The population](#the-population)
   - [The cars](#the-cars)
   - [The management](#the-management)
@@ -53,7 +51,7 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
-# todo
+# TODO
 - [X] check car proba_accident and fiability
 - [X] maintenance price
 - [X] parameters
@@ -83,14 +81,12 @@ car_type not the same proba_accident
 so if more autonomous on roads, less accident, so less go back to manual (but possible)
 
 
-# \! Presentation
+# Presentation
 
 slides to follow the report and live interaction or video  
 10-15min  
 explain the problematic and the results to answer the problem  
 and the difficulties
-
-
 
 resident live analysis with explanation of the steps of life
 
@@ -141,11 +137,7 @@ Other criteria (segregation, money cap, fear of accident) will conclude on choos
 People are taking their cars or not to go to work.   
 Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
 
-diagram of the species
-
-## The map
-
-## The road network
+![Diagram of the interactions between  species of the model](images/diagram_model.png)
 
 ## The population
 
