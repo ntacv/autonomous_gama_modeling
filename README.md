@@ -4,25 +4,26 @@
 
 This repo is a modeling project for a master 2 class "Modeling and simulation of complex systems". It is done using Gama software and presents a report in this readme. 
 
-# USTH December 2024
+## USTH December 2024
 
 Nathan Choukroun \- USTH ICT M2 / ESILV A5 Embedded  
 Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
 
 - [Autonomous Cars Modeling Project (WorkInProgress)](#autonomous-cars-modeling-project-workinprogress)
 - [Context](#context)
-- [USTH December 2024](#usth-december-2024)
-- [Project topic presentation](#project-topic-presentation)
-- [TODO](#todo)
-- [Presentation](#presentation)
+  - [USTH December 2024](#usth-december-2024)
+  - [Project topic presentation](#project-topic-presentation)
+  - [Installation and setup](#installation-and-setup)
+  - [Presentation](#presentation)
+- [Introduction](#introduction)
 - [The model](#the-model)
-  - [Introduction](#introduction)
   - [The population](#the-population)
   - [The cars](#the-cars)
   - [The management](#the-management)
   - [Improvements](#improvements)
 - [Steps and features of conception](#steps-and-features-of-conception)
   - [Steps](#steps)
+  - [Difficulties and choices](#difficulties-and-choices)
   - [Experiments and interactions](#experiments-and-interactions)
   - [Cities and improvements](#cities-and-improvements)
   - [Code commenting for documentation](#code-commenting-for-documentation)
@@ -31,9 +32,10 @@ Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
   - [Calibration](#calibration)
   - [Discussion of the results](#discussion-of-the-results)
 - [Conclusion](#conclusion)
+- [Sources](#sources)
 
 
-# Project topic presentation
+## Project topic presentation
 
 What financial incentives should be provided to move a city to autonomous cars? 
 
@@ -51,58 +53,39 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
-# TODO
-- [X] check car proba_accident and fiability
-- [X] maintenance price
-- [X] parameters
-- [X] owner of a car
-- [X] move accident to car
-- [X] starting car_type proportion
-- [X] change car_type proba accident_history
-- [X] move car_type proba to accident
-- [X] move car cost to inhabitant and add it to the car (owner is managing the sale)(negociate price and then buy car)
-- [X] remove max_car_cost condition
-- [X] end simu with full auto ratio or full manual ratio 
-- [X] accident proba per car_type (+ ou *)
-- [X] first car for everyone should depend on proportion_car_type
-- [X] add in first chart number of car died of fiability (or proportion of fiability to accident)
-- problems
-- [ ] init create car location is random
-- improvements
-- [X] realistic input parameters for salary, maintenance time (auto proba accident)(steps 60min, population size)
-- [ ] change car_type proba schelling
+## Installation and setup
 
-if car in accident > what car_type > habitant knows and update > car dump > 
+The model can be run by: installing Gama software; downloading ``` autonomous_integration.gaml```; importing the model to a new project; running the ```visual``` experiment; modify the parameters depending on the context; 
 
-if no car > want a car > what type > then what price > check budget (over 0 or over base price) > can buy > car_cost to car
+## Presentation
 
-proba_choose_car_type depend on accident_history and schelling
-car_type not the same proba_accident
-so if more autonomous on roads, less accident, so less go back to manual (but possible)
+Slides to present the problematic, the conception difficulties and the results. 
 
+Video of the model running on specific parameters.
 
-# Presentation
+# Introduction
 
-slides to follow the report and live interaction or video  
-10-15min  
-explain the problematic and the results to answer the problem  
-and the difficulties
+Problematic: 
+What financial incentives should be provided to move a city to autonomous cars? 
 
-resident live analysis with explanation of the steps of life
-
-add pictures and code to explain
-debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
+Reasons and objectives  
+- understand the reason of buying a new kind of car
+- imitate the stakeholders 
+- understand the impact of the transition
+- optimize the transition
 
 # The model
 
-running model and interactions  
-github repo for the model  
-presentation: slides to follow the report and live interaction or video
-the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
+Goals of the model
+- decrease accidents on the roads
+- find the best proportion of car type 
+- try different financial plans 
+- adapt it to any city context
 
-I start with 50chance of bying a specific car type because I don't know there advantages 
-but I already have a manual car
-
+implementation of a function that determine the probability of buying a car type
+This starting income will determine if they are able to buy a car or not.   
+Other criteria (segregation, money cap, fear of accident) will conclude on choosing autonomous or manual cars.   
+People are walking or taking cars to go to work. 
 
 I have to move around the city
 Having a car is easier
@@ -123,21 +106,7 @@ and repeat the process
 
 added timing to accident to reflect the impact of autonomous to the safeness of the city
 
-## Introduction
-
-Problematic  
-Reasons and objectives  
-1 objective reason of buying  
-2 add new thing  
-3 external like government
-
-Population is starting with a relative wealth depending on their neighborhood and their building.   
-This starting income will determine if they are able to buy a car or not.   
-Other criteria (segregation, money cap, fear of accident) will conclude on choosing autonomous or manual cars.   
-People are taking their cars or not to go to work.   
-Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
-
-![Diagram of the interactions between  species of the model](images/diagram_model.png)
+![Diagram of the interactions between  species of the model](assets/diagram_model.png)
 
 ## The population
 
@@ -203,6 +172,10 @@ Where is a person going? How does he go there?
 \-maybe implement speed of car based on urgency and law causing accident or more money
 \-find realistic parameters for the model (probabilities, prices, salaries, maintenance reccurence)
 
+## Difficulties and choices
+
+the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
+
 ## Experiments and interactions
 
 one batch extension  
@@ -210,6 +183,9 @@ Paris to hanoi to LA
 one interaction
 
 ## Cities and improvements
+
+Population is starting with a relative wealth depending on their neighborhood and their building.   
+Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
 
 ## Code commenting for documentation
 
@@ -238,3 +214,12 @@ We can also observe an effect of the accident localisation. The impact of the gr
 
 how to reason about the model and the results  
 but synthetic  
+
+debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
+
+# Sources
+
+[Autonomous vehicles worldwide - statistics & facts](https://www.statista.com/topics/3573/autonomous-vehicle-technology/#topicOverview)
+[The powerful role financial incentives can play in a transformation](https://www.mckinsey.com/capabilities/transformation/our-insights/the-powerful-role-financial-incentives-can-play-in-a-transformation)
+[On the performance of shared autonomous bicycles: A simulation study](https://www.sciencedirect.com/science/article/pii/S2772424722000166)
+[Urban Mobility Swarms](https://ieeexplore.ieee.org/abstract/document/10421869)
