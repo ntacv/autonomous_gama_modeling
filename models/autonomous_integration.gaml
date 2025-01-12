@@ -220,6 +220,7 @@ species car skills:[moving]{
 		do die;
 	}
 	
+	//model can use one of the two ways of affecting the choice function (addition or multiplication of a probality)
 	action update_owner_proba_adding(inhabitant owner){
 		owner.proba_choose_car_type <- last(owner.car_type_history)
 		? owner.proba_choose_car_type-ratio_prefered_car_type 
@@ -290,7 +291,7 @@ experiment visual type:gui{
 	parameter "base salary per cycle" var:salary min:1.0 step:1  category:"delta";
 	parameter "proba delta salary" var:proba_delta_salary category:"delta";
 	parameter "delta car fiability" var:fiability_delta min:0.0 category:"delta";
-	parameter "proba maintain car" var:proba_maintain_car category:"delta";
+	parameter "proba maintain car" var:proba_maintain_car step:0.001 category:"delta";
 	parameter "proba create accident" var:proba_accident min:0.0 max:1.0 category:"delta";
 	parameter "proba autonomous create accident" var:proba_accident_autonomous category:"delta";
 	parameter "ratio_prefered_car_type" var:ratio_prefered_car_type category:"delta";

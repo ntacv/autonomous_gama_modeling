@@ -15,20 +15,12 @@ Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
   - [Project topic presentation](#project-topic-presentation)
   - [Installation and setup](#installation-and-setup)
   - [Presentation](#presentation)
-- [Introduction](#introduction)
 - [The model](#the-model)
-  - [The population](#the-population)
   - [The cars](#the-cars)
-  - [The management](#the-management)
-  - [Improvements](#improvements)
 - [Steps and features of conception](#steps-and-features-of-conception)
   - [Steps](#steps)
   - [Difficulties and choices](#difficulties-and-choices)
-  - [Experiments and interactions](#experiments-and-interactions)
-  - [Cities and improvements](#cities-and-improvements)
-  - [Code commenting for documentation](#code-commenting-for-documentation)
-- [Experimentation of the model](#experimentation-of-the-model)
-  - [Explanation of the experiments](#explanation-of-the-experiments)
+  - [Improvements](#improvements)
   - [Calibration](#calibration)
   - [Discussion of the results](#discussion-of-the-results)
 - [Conclusion](#conclusion)
@@ -63,7 +55,7 @@ Slides to present the problematic, the conception difficulties and the results.
 
 Video of the model running on specific parameters.
 
-# Introduction
+# The model
 
 Problematic: 
 What financial incentives should be provided to move a city to autonomous cars? 
@@ -74,151 +66,100 @@ Reasons and objectives
 - understand the impact of the transition
 - optimize the transition
 
-# The model
-
 Goals of the model
 - decrease accidents on the roads
 - find the best proportion of car type 
 - try different financial plans 
 - adapt it to any city context
 
-implementation of a function that determine the probability of buying a car type
-This starting income will determine if they are able to buy a car or not.   
-Other criteria (segregation, money cap, fear of accident) will conclude on choosing autonomous or manual cars.   
+The starting income will determine if they are able to buy a car or not. 
+Other criteria (money cap, maintainance of personal car, experience with accidents) will conclude on choosing autonomous or manual cars. 
+Implementation of a function that determine the probability of buying a car type
 People are walking or taking cars to go to work. 
 
-I have to move around the city
-Having a car is easier
-I want to buy a car
-I can buy the car when:?
-I want a specific car type
-The price of the car is around the market price, maybe not in my budget
-I buy the car
-I get a salary to increase my money
-I can maintain my car based on my preference
-If my car is not maintained higher risk of accident
-if my car is autonomous, lower risk of accident
-If my car is in an accident
-I loose my car
-I had an accident with a manual car, 
-I may be able to buy a new car
-and repeat the process
+Residents life cycle: 
+- I have to move around the city
+- Having a car is easier
+- I want to buy a car
+- I can buy the car when I have enough money 
+- The price of the car is around the market price, maybe not in my budget
+- I want a specific car type
+- I buy the car
+- I get a salary to increase my money
+- I can maintain my car based on my preference
+- If my car is not maintained higher risk of accident
+- if my car is autonomous, lower risk of accident
+- If my car is in an accident
+- I loose my car
+- I had an accident with a manual car, 
+- I may be able to buy a new car
+- and repeat the process
 
-added timing to accident to reflect the impact of autonomous to the safeness of the city
-
-![Diagram of the interactions between  species of the model](assets/diagram_model.png)
-
-## The population
-
-Segregation of choice for the type of car  
-Start by walking and increase car desire 
-compute number of accident > more accident influence the proba desire_autonomous
+Diagram of the interactions between species of the model
+![Diagram of the interactions between species of the model](assets/diagram_model.png)
 
 ## The cars
 
-Manage purchase price and maintenance price  
-Accidents happens when too many cars are too close together   
-Or too high of proba\_brake\_law  
-Or too low of fiability caused by long distance driven
-Gets money
-The type of the car is defined by the main proba_car_type (which could be a general parameter based on government influence, marketing and advertising influense) and the number of accident a resident has been part of. for each accident the probaility to move to autonomous is increased.
+Manage purchase price and maintenance price. Maintenance price is the pourcentage of the purchase price. 
+Accidents happens when too many cars are too close to each others and low fiability caused by long distance driven. 
 
-## The management
-
-\-manage salaries  
-\-choose start help   
-\-manage proba brake law  
-\-choose accident help  
-All based on auto or not
-
-## Improvements
-
-constant speed, possibility of crashes, cars without passengers, more expensive, new models  
-folllow the law or not, but autonomous always follows  
-proba brake\_law \> proba accident  
-proba neighbors cars for brake\_law  
-people make choices , not auto  
-choosing to buy auto or not based on proba price and accident for each type  
-car brake down of a car  
-Level of autonomous (https://en.wikipedia.org/wiki/Self-driving\_car\#Level\_5)  
-matrix of proba for levels,
-
-neighborhood of electric or not  
-whith differente schelling population (the moderns, the olds, the mids to buy auto)  
-they evolve base on the proba of price and accident  
-accident with auto so decrese proba of buy auto
-
-memory optimisation for running better model performance
+The type of the car is defined by the main proba_car_type (which could be a general parameter based on government influence, marketing and advertising influense) and the number of accident a resident has been part of. For each accident, the probability to move to autonomous is increased. 
 
 # Steps and features of conception
 
-progress report with steps and list of features  
-and documentation of the model and comment in the code
-
 ## Steps
 
-\-define constants  
-\-define variables and parameters based on the context  
-\-generate the city, import buildings and roads  
-\-add habitant (to buildings and cars, maybe not visible but update color of parent location)  
-Where is a person going? How does he go there?   
-\-add cars (move based on people needs)  
-\-add accident species 
-\-add money problems (purchase, condition of the car) gain money for each trip  
-\-implement accidents (caused by too many neighbours, low condition, bad people)  
-\-implement accident history: it is a list of accident for an inhabitant if his car was part of the accident
-\-implement segregation and motivation to buy auto  
-\-add probability of breaking the law and causing accident  
-\-maybe implement speed of car based on urgency and law causing accident or more money
-\-find realistic parameters for the model (probabilities, prices, salaries, maintenance reccurence)
+\- define constants  
+\- define variables and parameters based on the context  
+\- generate the city, import buildings and roads  
+\- add habitant (to buildings and cars, maybe not visible but update color of parent location). Where is a person going? How does he go there?   
+\- add cars (move based on people needs)  
+\- add accident species 
+\- add money problems (purchase, condition of the car) gain money for each trip  
+\- implement accidents (caused by too many neighbours, low condition of the car)  
+\- implement accident history: it is a list of accident for an inhabitant if his car was part of the accident
+\- implement motivation to buy auto  
+\- add timing to accidents to reflect the impact of autonomous to the safeness of a specific road or intersection. 
 
 ## Difficulties and choices
 
-the difficulty to make choices about the system. everything cannot be represent in the model so the developper needs to make choices and aim for the parameters that will represent best the hypothesis. for example it was choosen to implement population movement by walk and in cars but there are not following a common pattern of planning.  
+Developers must make choices and prioritize parameters that best represent the hypothesis, as not everything can be included in the model. For instance, population movement was implemented for both walking and driving, but these movements do not follow a common planning pattern. 
+One of the main challenges was making decisions about the system. A significant amount of time was spent testing the program to find the right parameters and understand the most efficient way to build the model.
 
-## Experiments and interactions
+## Improvements
 
-one batch extension  
-Paris to hanoi to LA  
-one interaction
-
-## Cities and improvements
-
-Population is starting with a relative wealth depending on their neighborhood and their building.   
-Cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
-
-## Code commenting for documentation
-
-# Experimentation of the model
-
-## Explanation of the experiments
-
-explanation and discussion of the experiments  
-you are the goverment
+\- find realistic parameters for the model per city (probabilities, prices, salaries, maintenance reccurence)
+\- memory optimisation for running better model performance
+\- implement different speed of car based on urgency and respect of the law
+\- matrix of proba for levels,
+\- whith differente schelling population (the moderns, the olds, the mids to buy auto)  
+\- population is starting with a relative wealth depending on their neighborhood and their building.   
+\- start by walking and increase car desire 
+\- cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
 
 ## Calibration
 
-need some real data
-calibration the input parameter  
-at a rate  
-compare the real data to the correct percentage of the model
-
+To ensure the accuracy of the model, real-world data is essential for calibration. The input parameters must be adjusted to reflect actual conditions. This involves setting the parameters at specific rates and comparing the model's output to real data. By doing so, we can validate the model's accuracy and make necessary adjustments to achieve a correct representation of the real-world scenario.
 ## Discussion of the results
 
-stats and proba to compare with results  
-I made modeling choices and i justify by
-
-We can also observe an effect of the accident localisation. The impact of the grid structure and complexity makes some roads more open to traffic and therefore to accidents. The model could be improved by adding a more realistic road network and a more realistic population movement. It would be helpful to start an anylisis of the traffic network and key points on reduicing accidents in the city. 
+The price of the car depending on the car type, actually does not significantly affect the overall model. This suggests that other factors, such as realistic randomness and personal preferences, play a more crucial role in the decision-making process of purchasing a car. 
+Moreover, the effect of maintenance and accidents makes the whole model interesting, as it adds complexity and realism. By incorporating these elements, the model can better simulate real-world scenarios, providing more accurate insights into the dynamics of autonomous and manual car integration. 
+We can also observe an effect of the accident localisation. The impact of the grid structure and complexity makes some roads more open to traffic and therefore to accidents. The model could be improved by adding a more realistic road network and a more realistic population movement. It would be helpful to start an anylisis of the traffic network and key points on reduicing accidents in the city.
 
 # Conclusion
 
-how to reason about the model and the results  
-but synthetic  
+By incorporating various factors such as population demographics, wealth distribution, car desire, and accident impacts, the model offers valuable insights into the decision-making processes and behaviors of individuals in a mixed car environment.
+The results indicate that while parameters does not significantly influence the overall model, other factors such as personal preferences, maintenance, and accidents play a crucial role. The inclusion of these elements adds complexity and realism to the model, making it a more accurate representation of real-world scenarios.
+To further enhance the model, future work could focus on improving the road network and population movement to better reflect actual traffic conditions. 
+This study demonstrates the potential of using simulation models to explore and understand the dynamics of autonomous vehicle integration. 
+The findings can help explore new optimised options to ensure a smooth and successful transition to autonomous vehicles.
 
-debrief learning gama (java?, use of gama, understanding modeling, useful application, somewhat easy coding)
+Throughout the development of this model, the use of the GAMA platform has proven to be both educational and practical. The Java-based modeling and simulation environment, facilitated the understanding and implementation of complex modeling scenarios by using intuitive keywords and less syntax. 
+The platform's interface and documentation made it relatively easy to code and simulate various aspects of the model, from charts to interaction. 
 
 # Sources
 
+[Level of autonomous car - Wikipedia](https://en.wikipedia.org/wiki/Self-driving\_car\#Level\_5)
 [Autonomous vehicles worldwide - statistics & facts](https://www.statista.com/topics/3573/autonomous-vehicle-technology/#topicOverview)
 [The powerful role financial incentives can play in a transformation](https://www.mckinsey.com/capabilities/transformation/our-insights/the-powerful-role-financial-incentives-can-play-in-a-transformation)
 [On the performance of shared autonomous bicycles: A simulation study](https://www.sciencedirect.com/science/article/pii/S2772424722000166)
