@@ -1,4 +1,4 @@
-# Autonomous Cars Modeling Project (WorkInProgress)
+# Autonomous Cars Modeling Project
 
 # Context
 
@@ -26,6 +26,18 @@ Supervised by Alexis Drogoul and Arthur Brugiere \- IRD
 - [Conclusion](#conclusion)
 - [Sources](#sources)
 
+## Presentation
+
+Slides to present the problematic, the conception difficulties and the results. 
+
+Link to the file of the slides
+- [Presentation slides](assets/modeling_USTH_ICT_M2.pdf)
+
+![What to expect? slide](assets/what_to_expect.png)
+
+![The model running on the first frames](assets/screenshot_start.png)
+
+Video of the model running on specific parameters.
 
 ## Project topic presentation
 
@@ -45,15 +57,17 @@ Extension 2: Take into account law, criminality, salaries, experience and segreg
 
 Extension 3: Adding different car companies with different car models that react differently to their inputs. 
 
+
 ## Installation and setup
 
-The model can be run by: installing Gama software; downloading ``` autonomous_integration.gaml```; importing the model to a new project; running the ```visual``` experiment; modify the parameters depending on the context; 
+The model can be run by: 
 
-## Presentation
+- installing [Gama software](https://gama-platform.org/); 
+- downloading ``` autonomous_integration.gaml```; 
+- importing the model to a new project; 
+- running the ```visual``` experiment; 
+- modify the parameters depending on the context and rerun
 
-Slides to present the problematic, the conception difficulties and the results. 
-
-Video of the model running on specific parameters.
 
 # The model
 
@@ -128,11 +142,11 @@ One of the main challenges was making decisions about the system. A significant 
 
 ## Improvements
 
-\- find realistic parameters for the model per city (probabilities, prices, salaries, maintenance reccurence)
+\- find realistic parameters for the model per city (probabilities, prices, salaries, maintenance recurrence)
 \- memory optimisation for running better model performance
 \- implement different speed of car based on urgency and respect of the law
-\- matrix of proba for levels,
-\- whith differente schelling population (the moderns, the olds, the mids to buy auto)  
+\- matrix of probability for levels of autonomousness,
+\- with different schelling population (the moderns, the olds, the mids to buy auto)  
 \- population is starting with a relative wealth depending on their neighborhood and their building.   
 \- start by walking and increase car desire 
 \- cars can go out by themselves to train and analyse data, to turn and speed up by themselves. 
@@ -140,6 +154,7 @@ One of the main challenges was making decisions about the system. A significant 
 ## Calibration
 
 To ensure the accuracy of the model, real-world data is essential for calibration. The input parameters must be adjusted to reflect actual conditions. This involves setting the parameters at specific rates and comparing the model's output to real data. By doing so, we can validate the model's accuracy and make necessary adjustments to achieve a correct representation of the real-world scenario.
+
 ## Discussion of the results
 
 The price of the car depending on the car type, actually does not significantly affect the overall model. This suggests that other factors, such as realistic randomness and personal preferences, play a more crucial role in the decision-making process of purchasing a car. 
@@ -160,7 +175,12 @@ The platform's interface and documentation made it relatively easy to code and s
 # Sources
 
 [Level of autonomous car - Wikipedia](https://en.wikipedia.org/wiki/Self-driving\_car\#Level\_5)
+
 [Autonomous vehicles worldwide - statistics & facts](https://www.statista.com/topics/3573/autonomous-vehicle-technology/#topicOverview)
+
 [The powerful role financial incentives can play in a transformation](https://www.mckinsey.com/capabilities/transformation/our-insights/the-powerful-role-financial-incentives-can-play-in-a-transformation)
+
 [On the performance of shared autonomous bicycles: A simulation study](https://www.sciencedirect.com/science/article/pii/S2772424722000166)
+
 [Urban Mobility Swarms](https://ieeexplore.ieee.org/abstract/document/10421869)
+
