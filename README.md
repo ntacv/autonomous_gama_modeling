@@ -60,6 +60,8 @@ Extension 3: Adding different car companies with different car models that react
 
 ## Installation and setup
 
+You are free to fork, download and use the code to improve it or tweak it, import your city data or update cars data to better reflect the present situation. Many parameters are available for you to adapt it, or you can even add any parameter you seem useful. 
+
 The model can be run by: 
 
 - installing [Gama software](https://gama-platform.org/); 
